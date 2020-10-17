@@ -1,0 +1,19 @@
+.review-box {
+  border-bottom: solid 1px white;
+  width: 80%;
+  margin: auto;
+  font-size: 15px;
+  position: relative;
+  padding: 20px 0px 40px 0px;
+}
+
+.icon-group {
+  position: absolute;
+  right: 0;
+}
+
+.icon {
+  cursor: pointer;
+  width: 20px;
+  margin: 4px;
+}
