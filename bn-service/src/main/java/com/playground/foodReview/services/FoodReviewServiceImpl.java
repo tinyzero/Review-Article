@@ -10,7 +10,10 @@ import com.playground.foodReview.responses.BadRequest;
 import com.playground.foodReview.responses.ReviewResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +30,9 @@ public class FoodReviewServiceImpl implements FoodReviewService {
 
     @Autowired
     private ReviewKeywordMappingRepository reviewKeywordMappingRepository;
+
+    @PersistenceContext
+    EntityManager entityManager;
 
     public ReviewResponse findWithId(Integer id) throws Exception {
         Optional<Review> review = reviewRepository.findById(id);
@@ -58,17 +64,40 @@ public class FoodReviewServiceImpl implements FoodReviewService {
         return response;
     }
 
+    @Transactional
     public ReviewResponse update(Integer id, Map<String, String> params) throws Exception {
-        Review review_obj = reviewRepository.findById(id).orElse(new Review());
         String new_review = params.get("new_review");
         String original_review = params.get("original_review");
 
+        Review review_obj = reviewRepository.findById(id).orElse(null);
         Review result = new Review();
-        if (review_obj.getReview().equals(original_review)) {
-            review_obj.setReview(new_review);
-            result = reviewRepository.save(review_obj);
+
+        if (review_obj==null) {
+            Review new_obj = new Review();
+            new_obj.setReview(new_review);
+
+            result = reviewRepository.save(new_obj);
+
+            List<Keyword> all_keyword = keywordRepository.findAll();
+
         } else {
-            throw new BadRequest("Failed, You are editing an old version of the article.", 412);
+            if (review_obj.getReview().equals(original_review)) {
+                review_obj.setReview(new_review);
+
+                result = reviewRepository.save(review_obj);
+
+                List<ReviewKeywordMapping> old_mapping = reviewKeywordMappingRepository.findByReview_id(id);
+
+                for (int i = 0; i < old_mapping.size(); i++){
+                    reviewKeywordMappingRepository.delete(old_mapping.get(i));
+                }
+
+//                this.mappingReviewWithKeyword(id, new_review);
+                reviewKeywordMappingRepository.insertMapping(id, new_review);
+
+            } else {
+                throw new BadRequest("Failed, You are editing an old version of the article.", 412);
+            }
         }
 
         List<Review> review_list = new LinkedList<>();
@@ -80,5 +109,12 @@ public class FoodReviewServiceImpl implements FoodReviewService {
 
         return response;
     }
+
+//    public void mappingReviewWithKeyword(Integer review_id, String review) {
+//        entityManager.createNativeQuery("INSERT INTO review_keyword_mapping (review_id, keyword_id) SELECT ? as review_id, kt.id as keyword_id FROM keyword kt WHERE ? like concat('%',kt.keyword,'%')")
+//                .setParameter(1, review_id)
+//                .setParameter(2, review)
+//                .executeUpdate();
+//    }
 
 }

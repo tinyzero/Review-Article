@@ -12,6 +12,7 @@ import java.util.Set;
 @Data
 public class Keyword {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @JsonProperty("id")
     private Integer id;
