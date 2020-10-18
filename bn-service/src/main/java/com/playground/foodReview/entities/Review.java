@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -12,6 +13,7 @@ import java.util.Set;
 @Data
 public class Review implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @JsonProperty("id")
     private Integer id;
