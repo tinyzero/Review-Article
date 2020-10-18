@@ -31,7 +31,7 @@ class Post extends Component {
     this.setState({ data: result });
 
     try {
-      const url = `http://docker.for.mac.localhost:8080/reviews/${id}`
+      const url = `http://docker.for.mac.host.internal:8080/reviews/${id}`
       let bodyFormData = new FormData();
       bodyFormData.append('new_review', review);
       bodyFormData.append('original_review', original);
@@ -45,7 +45,7 @@ class Post extends Component {
 
   search = async (search, type) => {
     if (type === 'id') {
-      const url = `http://docker.for.mac.localhost:8080/reviews/${search}`
+      const url = `http://docker.for.mac.host.internal:8080/reviews/${search}`
       try {
         const response = await axios({ method: 'GET', url });
         this.setState({ data: response.data.payload });
@@ -54,7 +54,7 @@ class Post extends Component {
         console.log(error);
       }
     } else {
-      const url = `http://docker.for.mac.localhost/reviews?query=${search}`
+      const url = `http://docker.for.mac.host.internal/reviews?query=${search}`
       try {
         const response = await axios({ method: 'GET', url });
         this.setState({ data: response.data.payload });
