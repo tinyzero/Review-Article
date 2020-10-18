@@ -76,7 +76,7 @@ class Post extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          {/* <h1> {title} </h1> */}
+          <h1> {title} </h1>
           <div className="container">
             <input
               className="search-box"
