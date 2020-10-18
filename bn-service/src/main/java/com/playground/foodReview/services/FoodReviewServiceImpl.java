@@ -31,10 +31,7 @@ public class FoodReviewServiceImpl implements FoodReviewService {
     @Autowired
     private ReviewKeywordMappingRepository reviewKeywordMappingRepository;
 
-    @PersistenceContext
-    EntityManager entityManager;
-
-    public ReviewResponse findWithId(Integer id) throws Exception {
+    public ReviewResponse findWithId(Integer id) {
         Optional<Review> review = reviewRepository.findById(id);
 
         List<Review> review_list = new LinkedList<>();
@@ -49,7 +46,7 @@ public class FoodReviewServiceImpl implements FoodReviewService {
         return response;
     }
 
-    public ReviewResponse findWithKeyword(String text) throws Exception {
+    public ReviewResponse findWithKeyword(String text) {
         Keyword keyword = keywordRepository.findByKeyword(text);
 
         List<Review> review_list = new LinkedList<>();
@@ -92,7 +89,6 @@ public class FoodReviewServiceImpl implements FoodReviewService {
                     reviewKeywordMappingRepository.delete(old_mapping.get(i));
                 }
 
-//                this.mappingReviewWithKeyword(id, new_review);
                 reviewKeywordMappingRepository.insertMapping(id, new_review);
 
             } else {
@@ -109,12 +105,5 @@ public class FoodReviewServiceImpl implements FoodReviewService {
 
         return response;
     }
-
-//    public void mappingReviewWithKeyword(Integer review_id, String review) {
-//        entityManager.createNativeQuery("INSERT INTO review_keyword_mapping (review_id, keyword_id) SELECT ? as review_id, kt.id as keyword_id FROM keyword kt WHERE ? like concat('%',kt.keyword,'%')")
-//                .setParameter(1, review_id)
-//                .setParameter(2, review)
-//                .executeUpdate();
-//    }
 
 }
