@@ -111,6 +111,15 @@ public class FoodReviewServiceImpl implements FoodReviewService {
         return response;
     }
 
+    public void mapping() {
+        List<Keyword> all_keyword = keywordRepository.findAll();
+        List<Review> all_review = reviewRepository.findAll();
+
+        for (int i = 0; i < all_review.size(); i++){
+            reviewKeywordMappingRepository.insertMapping(all_review.get(i).getId(), all_review.get(i).getReview());
+        }
+    }
+
 //    public void mappingReviewWithKeyword(Integer review_id, String review) {
 //        entityManager.createNativeQuery("INSERT INTO review_keyword_mapping (review_id, keyword_id) SELECT ? as review_id, kt.id as keyword_id FROM keyword kt WHERE ? like concat('%',kt.keyword,'%')")
 //                .setParameter(1, review_id)

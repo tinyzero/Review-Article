@@ -44,9 +44,9 @@ public class ReviewController {
         return ResponseEntity.status(200).body(result);
     }
 
-    @GetMapping(value = "/test/{id}")
-    public String search(@PathVariable String id) throws Exception {
-        return "ID : " + id;
+    @GetMapping(value = "/test") // for populate data only
+    public void populateData() {
+        foodReviewService.mapping();
     }
 
     @ExceptionHandler(Exception.class)
