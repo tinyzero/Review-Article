@@ -1,14 +1,14 @@
 package com.playground.foodReview.responses;
 
-public class BadRequest extends Exception {
+public class CustomResponse {
     private Integer code;
     private String message;
 
-    public BadRequest(String message, Integer code){
-        this.code = code;
+    public CustomResponse(String message, Integer code){
         this.message = message;
+        this.code = code;
     }
 
-    public Integer getCode() { return this.code; }
     public String getMessage() { return this.message; }
+    public Integer getCode() { return this.code; }
 }

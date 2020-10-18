@@ -2,6 +2,7 @@ package com.playground.foodReview.controllers;
 
 import com.playground.foodReview.entities.Review;
 import com.playground.foodReview.responses.BadRequest;
+import com.playground.foodReview.responses.CustomResponse;
 import com.playground.foodReview.responses.ReviewResponse;
 import com.playground.foodReview.services.FoodReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,11 @@ public class ReviewController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception ex) {
-        BadRequest err = new BadRequest(ex.getCause().getMessage(), 400);
-        return ResponseEntity.status(400).body(err);
+        if (ex instanceof BadRequest){
+            CustomResponse customResponse = new CustomResponse(ex.getMessage(), 412);
+            return ResponseEntity.status(412).body(customResponse);
+        }
+        CustomResponse customResponse = new CustomResponse(ex.getCause().getMessage(), 400);
+        return ResponseEntity.status(400).body(customResponse);
     }
 }
