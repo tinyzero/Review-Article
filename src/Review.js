@@ -30,7 +30,7 @@ export default class Review extends Component {
           <img
             className="icon"
             onClick={() => {
-              handleSubmit(review, id);
+              handleSubmit(review, id, this.props.review);
               this.setState({ isEdit: false });
             }}
             src={checkicon}

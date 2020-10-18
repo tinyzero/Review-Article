@@ -4,22 +4,6 @@ import "./App.css";
 
 import axios from 'axios';
 
-const response = {
-  data: [
-    { id: 1, review: "น่าอร่อยจัง" },
-    {
-      id: 2,
-      review: `เมนูขึ้นชื่อของร้านมัลลิการ์ ก็ต้องเย็นตาโฟ ทั้งแบบใจเสาะ (เผ็ดปานกลาง) และรสเจ็บ (เผ็ดจริงจัง) แต่กว่าจะรู้สึกเผ็ดผ่านไปครึ่งชาม 555 รสเข้มข้น ไม่ต้องปรุงเลย เส้นใหญ่เหนียวนุ่ม ทานกับเต้าหู้ทอด หอม กรอบนอกนุ่มในอร่อยมากค่ะ"
-      》 มาธุระแถวพืชสวนโลก เกินเวลาทานมื้อเที่ยง เจอร้านไหนก็แวะ เปิดแอพวงในหาร้านที่ใกล้ๆ เจอร้านข้าวซอยชื่อคุ้นเคย มาเปิดละแวกนี้ เลยเลี้ยวเข้ามาชิม
-        》 ภานในร้านมี ที่นั่งประมาณ 15โต๊ะ โดยประมาณ ภายในร้านแลดูวุ่นวายดี มีคนเข้ามาทานตลอด มีที่จอดรถเยอะ วันนี้มาคนเดียวเลยลองชิมอาหารดังนี้`,
-    },
-    {
-      id: 3,
-      review: `เปิดแอพวงในหาร้านที่ใกล้ๆ เจอร้านข้าวซอยชื่อคุ้นเคย มาเปิดละแวกนี้ เลยเลี้ยวเข้ามาชิม
-        》 ภานในร้านมี ที่นั่งประมาณ 15โต๊ะ โดยประมาณ ภายในร้านแลดูวุ่นวายดี มีคนเข้ามาทานตลอด มีที่จอดรถเยอะ วันนี้มาคนเดียวเลยลองชิมอาหารดังนี้`,
-    },
-  ],
-};
 class Post extends Component {
   state = {
     search: '',
@@ -35,20 +19,33 @@ class Post extends Component {
     this.setState({ type: e.target.value });
   };
 
-  handleSubmit = (review, id) => {
-    const result = response.data.map((item) => {
+  handleSubmit = async (review, id, original) => {
+    const { data } = this.state
+    const result = data.map((item) => {
       if (item.id === id) {
         item.review = review;
       }
       return item;
     });
+
     this.setState({ data: result });
-    // request patch or put to edit data here
+
+    try {
+      const url = `http://localhost:8080/reviews/${id}`
+      let bodyFormData = new FormData();
+      bodyFormData.append('new_review', review);
+      bodyFormData.append('original_review', original);
+      const response = await axios({ method: 'PUT', url, data: bodyFormData });
+      this.setState({ data: response.data.payload });
+
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   search = async (search, type) => {
     if (type === 'id') {
-      let url = `http://localhost:8080/reviews/${search}`
+      const url = `http://localhost:8080/reviews/${search}`
       try {
         const response = await axios({ method: 'GET', url });
         this.setState({ data: response.data.payload });
@@ -57,7 +54,7 @@ class Post extends Component {
         console.log(error);
       }
     } else {
-      let url = `http://localhost:8080/reviews?query=${search}`
+      const url = `http://localhost:8080/reviews?query=${search}`
       try {
         const response = await axios({ method: 'GET', url });
         this.setState({ data: response.data.payload });
@@ -111,7 +108,6 @@ class Post extends Component {
           </div>
           <div className="output-box">
             {data?.map((item) => {
-              console.log(item)
               return (
                 <Review
                   id={item.id}
