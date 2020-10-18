@@ -11,4 +11,5 @@ public interface FoodReviewService {
     ReviewResponse findWithId(Integer id) throws Exception;
     ReviewResponse findWithKeyword(String text) throws Exception;
     ReviewResponse update(Integer id, Map<String, String> params) throws Exception;
+    void mapping();
 }

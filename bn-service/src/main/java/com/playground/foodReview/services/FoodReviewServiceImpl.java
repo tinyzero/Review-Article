@@ -77,6 +77,8 @@ public class FoodReviewServiceImpl implements FoodReviewService {
 
             List<Keyword> all_keyword = keywordRepository.findAll();
 
+            reviewKeywordMappingRepository.insertMapping(id, new_review);
+
         } else {
             if (review_obj.getReview().equals(original_review)) {
                 review_obj.setReview(new_review);
@@ -106,4 +108,13 @@ public class FoodReviewServiceImpl implements FoodReviewService {
         return response;
     }
 
+    public void mapping() {
+        List<Keyword> all_keyword = keywordRepository.findAll();
+        List<Review> all_review = reviewRepository.findAll();
+
+        for (int i = 0; i < all_review.size(); i++){
+            reviewKeywordMappingRepository.insertMapping(all_review.get(i).getId(), all_review.get(i).getReview());
+        }
+    }
+    
 }
