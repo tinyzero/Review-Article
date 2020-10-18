@@ -9,7 +9,7 @@ services:
     entrypoint:
       - java
       - -jar
-      - /app/review.jar
+      - /app/foodReview-0.0.1-SNAPSHOT.jar
     restart: always
     ports:
       - "8080:8080"
@@ -26,3 +26,11 @@ services:
     volumes:
       - "/app/node_modules"
       - "./:/app"
+  db:
+    build:
+      context: ./db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: passw0rd
+    ports:
+      - "5432:5432"

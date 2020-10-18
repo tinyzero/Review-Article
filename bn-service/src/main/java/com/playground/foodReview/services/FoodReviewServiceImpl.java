@@ -116,5 +116,5 @@ public class FoodReviewServiceImpl implements FoodReviewService {
             reviewKeywordMappingRepository.insertMapping(all_review.get(i).getId(), all_review.get(i).getReview());
         }
     }
-    
+
 }
